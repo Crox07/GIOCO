@@ -1,2 +1,2 @@
-# GIOCO
+# progetto pygame
 progetto scolastico
