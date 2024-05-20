@@ -5,7 +5,10 @@ pygame.init()
 screen = pygame.display.set_mode((900, 700))
 screen.fill((255,255,255))
 pygame.display.set_caption("GIOCO")
-PLAYER1=pygame.image.load("grass.png")
+
+space1=pygame.image.load('space1.jpg')
+space=pygame.image.load('space.png')
+
 
 
 
@@ -20,7 +23,9 @@ while not done:
     for ev in pygame.event.get():
         if ev.type == QUIT:
             done = True
-    screen.blit(PLAYER1, (170,170))
+    screen.blit(space,(-100,0))
+    screen.blit(space1,(0,0))
+   
     pygame.display.update()
 pygame.quit()
 
