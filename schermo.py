@@ -7,9 +7,11 @@ screen = pygame.display.set_mode((1200, 750))
 
 pygame.display.set_caption("GIOCO")
 
+
+
 Initial_Screen=pygame.image.load('Schermata_inizio.jpg')
-space1=pygame.image.load('space1.jpg')
-space1=pygame.transform.scale(space1, (1200,750))
+space=pygame.image.load('space.jpg')
+space=pygame.transform.scale(space, (1200,750))
 
 
 font1=pygame.font.Font(None, 80)
@@ -20,6 +22,10 @@ font2=pygame.font.Font(None, 80)
     #    self.image = pygame.image.load(PLAYER1)
 
 SCHERMATA_INIZIALE=True
+SCHERMATA_MENU=False
+
+PvP=False
+Duo=False
 
 def TITLE_SCREEN():
     global SCHERMATA_INIZIALE
@@ -34,22 +40,68 @@ def TITLE_SCREEN():
     screen.blit(game_name, game_name_rect)
     pygame.display.flip()
 
+def OPTIONS_MENU():
+    global PvP, Duo
+    
+    mouse_pos=pygame.mouse.get_pos()
+
+    screen.blit(space,(0,0)) 
+    
+    if PvP:
+        PvP_color=(255,20,20)
+    else:
+        PvP_color=(20,20,255)
+    
+    if Duo:
+        Duo_color=(255,20,20)
+    else:
+        Duo_color=(20,20,255)
+
+    PvP_text=font2.render("PvP", True, (PvP_color))
+    PvP_text_rect=PvP_text.get_rect(center=(200,200))
+    Duo_text=font2.render("Duo", True, Duo_color)
+    Duo_text_rect=Duo_text.get_rect(center=(1000,200)) 
+
+    for ev in pygame.event.get():
+        if ev.type == pygame.MOUSEBUTTONDOWN:
+            if PvP_text_rect.collidepoint(mouse_pos):
+                PvP=True
+                Duo=False
+
+            if  Duo_text_rect.collidepoint(mouse_pos):
+                Duo=True
+                PvP=False
+
+
+    screen.blit(PvP_text, PvP_text_rect)
+    screen.blit(Duo_text, Duo_text_rect)
+
+    if PvP or Duo:
+        play_text=font2.render("Press space to play", True, (20, 20, 255))
+        play_text_rect=play_text.get_rect(center=(600,600))
+        screen.blit(play_text, play_text_rect)
+
+    pygame.display.flip()
+
 
 
 done = False
 while not done:
+
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             done = True
-        if ev.type == pygame.MOUSEBUTTONDOWN:
-            if SCHERMATA_INIZIALE:
+        if ev.type == pygame.MOUSEBUTTONDOWN and SCHERMATA_INIZIALE==True:
                 SCHERMATA_INIZIALE = False
+                SCHERMATA_MENU = True
 
     if SCHERMATA_INIZIALE:
         TITLE_SCREEN()
-    else:
-        screen.blit(space1,(0,0))
-        pygame.display.flip()
+
+    elif SCHERMATA_MENU:
+        OPTIONS_MENU()
+
+    pygame.display.flip()
 
 
 
