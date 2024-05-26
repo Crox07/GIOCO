@@ -5,7 +5,7 @@ pygame.init()
 
 screen = pygame.display.set_mode((1200, 750))
 
-pygame.display.set_caption("GIOCO")
+pygame.display.set_caption("SPACE WARS")
 
 
 
@@ -13,7 +13,7 @@ Initial_Screen=pygame.image.load('Schermata_inizio.jpg').convert_alpha()
 space=pygame.image.load('space.jpg').convert_alpha()
 space=pygame.transform.scale(space, (1200,750))
 
-options_screen=pygame.image.load('stars.jpg').convert_alpha()
+#options_screen=pygame.image.load('stars.jpg').convert_alpha()
 
 font1=pygame.font.Font('Pixeltype.ttf', 150)
 font2=pygame.font.Font('Pixeltype.ttf', 120)
@@ -24,7 +24,7 @@ font2=pygame.font.Font('Pixeltype.ttf', 120)
 
 SCHERMATA_INIZIALE=True
 SCHERMATA_MENU=False
-
+INIZIO_PARTITA=False
 PvP=False
 Duo=False
 
@@ -44,21 +44,22 @@ def TITLE_SCREEN():
     pygame.display.flip()
 
 def OPTIONS_MENU():
-    global PvP, Duo
+    global PvP, Duo, INIZIO_PARTITA
     
     mouse_pos=pygame.mouse.get_pos()
 
-    screen.blit(options_screen,(0,0)) 
+    screen.blit(space,(0,0)) 
     
     if PvP:
-        PvP_color=(255,20,20)
+        PvP_color=('red') 
+
     else:
-        PvP_color=(20,20,255)
+        PvP_color=(0, 0, 102)
     
     if Duo:
-        Duo_color=(255,20,20)
+        Duo_color=('red')
     else:
-        Duo_color=(20,20,255)
+        Duo_color=(0, 0, 102)
 
     PvP_text=font2.render("PvP", True, (PvP_color))
     PvP_text_rect=PvP_text.get_rect(center=(200,200))
@@ -66,7 +67,7 @@ def OPTIONS_MENU():
     surface1=pygame.Surface((200,100))
     surf_rect=surface1.get_rect(center=(200,200))
     surface1.fill('grey')
-    pygame.draw.rect(surface1,'yellow',surface1.get_rect(),10)
+    pygame.draw.rect(surface1,'yellow',surface1.get_rect(),3)
     surface1.blit(PvP_text,PvP_text_rect)
     
     screen.blit(surface1,surf_rect)
@@ -77,7 +78,7 @@ def OPTIONS_MENU():
     surface2=pygame.Surface((200,100))
     surf_rect2=surface2.get_rect(center=(1000,200))
     surface2.fill('grey')
-    pygame.draw.rect(surface2,'yellow',surface2.get_rect(),10)     
+    pygame.draw.rect(surface2,'yellow',surface2.get_rect(),3)     
     surface2.blit(Duo_text,Duo_text_rect)
 
     screen.blit(surface2,surf_rect2)
@@ -97,13 +98,19 @@ def OPTIONS_MENU():
     screen.blit(Duo_text, Duo_text_rect)
 
     if PvP or Duo:
-        play_text=font2.render("Press space to play", True, (20, 20, 255))
+        play_text=font2.render("Press space to play", True, 'white')
         play_text_rect=play_text.get_rect(center=(600,600))
         screen.blit(play_text, play_text_rect)
 
     pygame.display.flip()
 
-
+def GAME_SCREEN():
+    for ev in pygame.event.get():
+        if ev.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    screen.fill('black')
+    pygame.display.flip()
 
 done = False
 while not done:
@@ -112,8 +119,12 @@ while not done:
         if ev.type == pygame.QUIT:
             done = True
         if ev.type == pygame.MOUSEBUTTONDOWN and SCHERMATA_INIZIALE==True:
-                SCHERMATA_INIZIALE = False
-                SCHERMATA_MENU = True
+            SCHERMATA_INIZIALE = False
+            SCHERMATA_MENU = True
+        if ev.type == pygame.KEYDOWN:
+            if ev.key == pygame.K_SPACE and (PvP or Duo):
+                INIZIO_PARTITA=True
+                SCHERMATA_MENU=False
 
     if SCHERMATA_INIZIALE:
         TITLE_SCREEN()
@@ -121,6 +132,8 @@ while not done:
     elif SCHERMATA_MENU:
         OPTIONS_MENU()
 
+    elif INIZIO_PARTITA:
+        GAME_SCREEN()
     pygame.display.flip()
 
 
