@@ -22,6 +22,12 @@ font2=pygame.font.Font('Pixeltype.ttf', 120)
   #  def __init__(self, posx, posy, width = 100, height = 100) -> None:
     #    self.image = pygame.image.load(PLAYER1)
 
+player1=pygame.image.load('triangle1.png')
+player1_rec=player1.get_rect(center=(50,375))
+
+player2=pygame.image.load('triangle1.png')
+player2_rec=player2.get_rect(center=(1150,375))
+
 SCHERMATA_INIZIALE=True
 SCHERMATA_MENU=False
 INIZIO_PARTITA=False
@@ -105,11 +111,61 @@ def OPTIONS_MENU():
     pygame.display.flip()
 
 def GAME_SCREEN():
+    global player1_rec, player2_rec, INIZIO_PARTITA
+    
+    
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
     screen.fill('black')
+    
+    if player1_rec.bottom > 750:
+        player1_rec.bottom=750
+    if player1_rec.top < 0:
+        player1_rec.top=0   
+    if player1_rec.left < 0:
+        player1_rec.left=0    
+    if player1_rec.right > 1200:
+        player1_rec.right=1200    
+
+    if player2_rec.bottom > 750:
+        player2_rec.bottom=750
+    if player2_rec.top < 0:
+        player2_rec.top=0   
+    if player2_rec.left < 0:
+        player2_rec.left=0    
+    if player2_rec.right > 1200:
+        player2_rec.right=1200     
+    
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        player1_rec.y -= 1
+    if keys[pygame.K_s]:
+        player1_rec.y += 1
+    if keys[pygame.K_a]:
+        player1_rec.x -= 1
+    if keys[pygame.K_d]:
+        player1_rec.x += 1
+
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_UP]:
+        player2_rec.y -= 1
+    if keys[pygame.K_DOWN]:
+        player2_rec.y += 1
+    if keys[pygame.K_LEFT]:
+        player2_rec.x -= 1
+    if keys[pygame.K_RIGHT]:
+        player2_rec.x += 1
+    
+    if player1_rec.colliderect(player2_rec):
+        INIZIO_PARTITA = False
+        SCHERMATA_MENU = True
+
+    screen.blit(player1, player1_rec)
+    screen.blit(player2,player2_rec)
+    
     pygame.display.flip()
 
 done = False
@@ -125,6 +181,8 @@ while not done:
             if ev.key == pygame.K_SPACE and (PvP or Duo):
                 INIZIO_PARTITA=True
                 SCHERMATA_MENU=False
+        
+
 
     if SCHERMATA_INIZIALE:
         TITLE_SCREEN()
