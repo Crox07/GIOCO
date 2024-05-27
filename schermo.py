@@ -7,7 +7,7 @@ screen = pygame.display.set_mode((1200, 750))
 
 pygame.display.set_caption("SPACE WARS")
 
-
+clock=pygame.time.Clock()
 
 Initial_Screen=pygame.image.load('Schermata_inizio.jpg').convert_alpha()
 space=pygame.image.load('space.jpg').convert_alpha()
@@ -41,16 +41,30 @@ def TITLE_SCREEN():
             pygame.quit()
             sys.exit()
 
-    screen.blit(Initial_Screen,(0,0))
-    game_name= font1.render("Space Wars", True, (0, 0, 102)).convert_alpha()
-    game_name_rect=game_name.get_rect(center=(600,400))
-    pygame.draw.rect(screen,(102,204,204),game_name_rect)
-    pygame.draw.rect(screen,'black',game_name_rect,3)
+
+
+    screen.blit(Initial_Screen, (0, 0))
+
+    game_name = font1.render("Space Wars", True, (0, 0, 102))
+    game_name_rect = game_name.get_rect(center=(600, 400))
+
+    riq = pygame.Surface((600, 250))
+    riq_rec = riq.get_rect(center=(600, 375))
+    riq.fill('WHITE')
+    pygame.draw.rect(riq, (102, 204, 204), riq.get_rect(), 10)
+    screen.blit(riq, riq_rec)
     screen.blit(game_name, game_name_rect)
+    
     pygame.display.flip()
 
 def OPTIONS_MENU():
     global PvP, Duo
+    
+    for ev in pygame.event.get():
+        if ev.type==pygame.QUIT:
+            pygame.quit()
+            sys.exit()   
+    
     
     mouse_pos=pygame.mouse.get_pos()
 
@@ -112,7 +126,6 @@ def OPTIONS_MENU():
 def GAME_SCREEN():
     global player1_rec, player2_rec, INIZIO_PARTITA,SCHERMATA_MENU
     
-
     screen.fill('black')
     
     if player1_rec.bottom > 750:
@@ -135,25 +148,26 @@ def GAME_SCREEN():
     
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        player1_rec.y -= 1
+        player1_rec.y -= 5
     if keys[pygame.K_s]:
-        player1_rec.y += 1
+        player1_rec.y += 5
     if keys[pygame.K_a]:
-        player1_rec.x -= 1
+        player1_rec.x -= 5
     if keys[pygame.K_d]:
-        player1_rec.x += 1
+        player1_rec.x += 5
 
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
-        player2_rec.y -= 1
+        player2_rec.y -= 5
     if keys[pygame.K_DOWN]:
-        player2_rec.y += 1
+        player2_rec.y += 5
     if keys[pygame.K_LEFT]:
-        player2_rec.x -= 1
+        player2_rec.x -= 5
     if keys[pygame.K_RIGHT]:
-        player2_rec.x += 1
+        player2_rec.x += 5
     
+    clock.tick(60)
     screen.blit(player1, player1_rec)
     screen.blit(player2,player2_rec)
     
