@@ -31,6 +31,16 @@ tron_rec=tron.get_rect(center=(600,375))
 player2=pygame.image.load('triangle1.png').convert_alpha()
 player2_rec=player2.get_rect(center=(1150,375))
 
+scia1=pygame.image.load('triangle1.png').convert_alpha()
+scia1_rect=scia1.get_rect(center=(50,375))
+
+scia2=pygame.image.load('triangle1.png').convert_alpha()
+scia2_rect=scia2.get_rect(center=(50,375))
+
+trail1_positions=[]
+trail2_positions=[]
+
+
 SCHERMATA_INIZIALE=True
 SCHERMATA_MENU=False
 INIZIO_PARTITA=False
@@ -135,7 +145,7 @@ def OPTIONS_MENU():
     return PvP_text_rect, Duo_text_rect
 
 def GAME_SCREEN():
-    global player1_rec, player2_rec, INIZIO_PARTITA,SCHERMATA_MENU
+    global player1_rec, player2_rec, INIZIO_PARTITA,SCHERMATA_MENU, scia1_rect, trail1_positions, scia2_rect, trail2_positions
     
     screen.fill('black')
     
@@ -167,7 +177,6 @@ def GAME_SCREEN():
     if keys[pygame.K_d]:
         player1_rec.x += 5
 
-
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
         player2_rec.y -= 5
@@ -177,16 +186,44 @@ def GAME_SCREEN():
         player2_rec.x -= 5
     if keys[pygame.K_RIGHT]:
         player2_rec.x += 5
-    
-    clock.tick(60)
+
     screen.blit(player1, player1_rec)
     screen.blit(player2,player2_rec)
+
+    trail1_positions.append((player1_rec.x, player1_rec.y))
+    trail2_positions.append((player2_rec.x, player2_rec.y))
+
+    if len(trail1_positions) > 70:
+        trail1_positions.pop(0)
+
+    if len(trail2_positions) > 70:
+        trail2_positions.pop(0)
+    
+    for posizione in trail1_positions:
+        scia1_rect.topleft = posizione
+        screen.blit(scia1,scia1_rect)
+
+    for posizione in trail2_positions:
+        scia2_rect.topleft = posizione
+        screen.blit(scia2,scia2_rect)
+
+    for posizione in trail1_positions:
+        scia1_rect.topleft = posizione   
+        if player2_rec.colliderect(scia1_rect):
+            INIZIO_PARTITA = False
+            SCHERMATA_MENU = True
+
+    for posizione in trail1_positions:
+        scia2_rect.topleft = posizione   
+        if player2_rec.colliderect(scia2_rect):
+            INIZIO_PARTITA = False
+            SCHERMATA_MENU = True
     
     if player1_rec.colliderect(player2_rec):
         INIZIO_PARTITA = False
         SCHERMATA_MENU = True
         
-        pygame.display.flip()
+    pygame.display.flip()
 
 done = False
 PvP_text_rect, Duo_text_rect = None, None
@@ -232,6 +269,7 @@ while not done:
     elif INIZIO_PARTITA:
         GAME_SCREEN()
 
+    clock.tick(60)
     
     pygame.display.flip()
 
