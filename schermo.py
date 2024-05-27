@@ -48,7 +48,7 @@ def TITLE_SCREEN():
     game_name = font1.render("Space Wars", True, (0, 0, 102))
     game_name_rect = game_name.get_rect(center=(600, 400))
 
-    riq = pygame.Surface((600, 250))
+    riq = pygame.Surface((600, 200))
     riq_rec = riq.get_rect(center=(600, 375))
     riq.fill('WHITE')
     pygame.draw.rect(riq, (102, 204, 204), riq.get_rect(), 10)
