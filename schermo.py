@@ -37,6 +37,15 @@ scia1_rect=scia1.get_rect(center=(50,375))
 scia2=pygame.image.load('triangle1.png').convert_alpha()
 scia2_rect=scia2.get_rect(center=(50,375))
 
+end_text1=font1.render('PLAYER1 IS THE WINNER',False,'red')
+end_text_rec1=end_text1.get_rect(center=(600,300))
+
+end_text2=font1.render('PLAYER2 IS THE WINNER',False,'red')
+end_text_rec2=end_text2.get_rect(center=(600,300))
+
+end_text=font2.render('Press space to play again',False,'white')
+end_text_rec=end_text2.get_rect(center=(600,475))
+
 trail1_positions=[]
 trail2_positions=[]
 
@@ -193,38 +202,50 @@ def GAME_SCREEN():
     trail1_positions.append((player1_rec.x, player1_rec.y))
     trail2_positions.append((player2_rec.x, player2_rec.y))
 
-    if len(trail1_positions) > 70:
+    if len(trail1_positions) > 80:
         trail1_positions.pop(0)
 
-    if len(trail2_positions) > 70:
+    if len(trail2_positions) > 80:
         trail2_positions.pop(0)
     
     for posizione in trail1_positions:
         scia1_rect.topleft = posizione
         screen.blit(scia1,scia1_rect)
-
+        if player2_rec.colliderect(scia1_rect):
+            INIZIO_PARTITA = False
+            display_end_screen(winner=1)
+    
     for posizione in trail2_positions:
         scia2_rect.topleft = posizione
         screen.blit(scia2,scia2_rect)
-
-    for posizione in trail1_positions:
-        scia1_rect.topleft = posizione   
-        if player2_rec.colliderect(scia1_rect):
+        if player1_rec.colliderect(scia2_rect):
             INIZIO_PARTITA = False
-            SCHERMATA_MENU = True
-
-    for posizione in trail1_positions:
-        scia2_rect.topleft = posizione   
-        if player2_rec.colliderect(scia2_rect):
-            INIZIO_PARTITA = False
-            SCHERMATA_MENU = True
+            display_end_screen(winner=2)
+          
     
-    if player1_rec.colliderect(player2_rec):
-        INIZIO_PARTITA = False
-        SCHERMATA_MENU = True
-        
     pygame.display.flip()
 
+def display_end_screen(winner):
+    global SCHERMATA_MENU, INIZIO_PARTITA, trail1_positions, trail2_positions
+    screen.fill('black')
+    if winner == 1:
+        screen.blit(end_text1, end_text_rec1)
+    else:
+        screen.blit(end_text2, end_text_rec2)
+    screen.blit(end_text, end_text_rec)
+    pygame.display.flip()   
+
+    while True:
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if ev.type == pygame.KEYDOWN and ev.key== pygame.K_SPACE:
+                SCHERMATA_MENU=True
+                INIZIO_PARTITA=False
+                trail1_positions.clear()
+                trail2_positions.clear()               
+                return
 done = False
 PvP_text_rect, Duo_text_rect = None, None
 
