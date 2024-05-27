@@ -10,7 +10,7 @@ pygame.display.set_caption("SPACE WARS")
 clock=pygame.time.Clock()
 
 Initial_Screen=pygame.image.load('Schermata_inizio.jpg').convert_alpha()
-space=pygame.image.load('space.jpg').convert_alpha()
+space=pygame.image.load('menu.jpg').convert_alpha()
 space=pygame.transform.scale(space, (1200,750))
 
 #options_screen=pygame.image.load('stars.jpg').convert_alpha()
@@ -24,6 +24,9 @@ font2=pygame.font.Font('Pixeltype.ttf', 120)
 
 player1=pygame.image.load('triangle1.png').convert_alpha()
 player1_rec=player1.get_rect(center=(50,375))
+
+tron=pygame.image.load('tron2.png').convert_alpha()
+tron_rec=tron.get_rect(center=(600,375))
 
 player2=pygame.image.load('triangle1.png').convert_alpha()
 player2_rec=player2.get_rect(center=(1150,375))
@@ -67,9 +70,15 @@ def OPTIONS_MENU():
     
     
     mouse_pos=pygame.mouse.get_pos()
-
     screen.blit(space,(0,0)) 
     
+    sfon_mot=pygame.Surface((350,750))
+    sfon_mot_rec=sfon_mot.get_rect(midbottom=(600,750))
+    sfon_mot.fill('black')
+    screen.blit(sfon_mot,sfon_mot_rec)
+    pygame.draw.line(screen,'white', (130, 100))
+    
+    screen.blit(tron,tron_rec)
     if PvP:
         PvP_color=('red') 
 
@@ -87,7 +96,7 @@ def OPTIONS_MENU():
     surface1=pygame.Surface((200,100))
     surf_rect=surface1.get_rect(center=(200,200))
     surface1.fill('grey')
-    pygame.draw.rect(surface1,'yellow',surface1.get_rect(),3)
+    pygame.draw.rect(surface1,(76,45,125),surface1.get_rect(),5)
     surface1.blit(PvP_text,PvP_text_rect)
     screen.blit(surface1,surf_rect)
     
@@ -97,10 +106,12 @@ def OPTIONS_MENU():
     surface2=pygame.Surface((200,100))
     surf_rect2=surface2.get_rect(center=(1000,200))
     surface2.fill('grey')
-    pygame.draw.rect(surface2,'yellow',surface2.get_rect(),3)     
+    pygame.draw.rect(surface2,(76,45,125),surface2.get_rect(),5)     
     surface2.blit(Duo_text,Duo_text_rect)
     screen.blit(surface2,surf_rect2)
     
+
+
     for ev in pygame.event.get():
         if ev.type == pygame.MOUSEBUTTONDOWN:
             if PvP_text_rect.collidepoint(mouse_pos):
