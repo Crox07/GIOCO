@@ -76,8 +76,8 @@ def OPTIONS_MENU():
     sfon_mot_rec=sfon_mot.get_rect(midbottom=(600,750))
     sfon_mot.fill('black')
     screen.blit(sfon_mot,sfon_mot_rec)
-    pygame.draw.line(screen,'white', (130, 100))
-    
+    pygame.draw.line(screen,'white',(420,0), (420, 750),10)
+    pygame.draw.line(screen,'white',(780,0), (780, 750),10)
     screen.blit(tron,tron_rec)
     if PvP:
         PvP_color=('red') 
