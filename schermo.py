@@ -58,6 +58,7 @@ Duo=False
 
 def TITLE_SCREEN():
     global SCHERMATA_INIZIALE
+    
     for ev in pygame.event.get():
         if ev.type==pygame.QUIT:
             pygame.quit()
