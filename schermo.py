@@ -203,7 +203,7 @@ def GAME_SCREEN():
     trail2_positions.append((player2_rec.x, player2_rec.y))
 
     if len(trail1_positions) > 80:
-        trail1_positions.pop(0)
+        trail1_positions.pop(0) 
 
     if len(trail2_positions) > 80:
         trail2_positions.pop(0)
