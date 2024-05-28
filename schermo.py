@@ -37,6 +37,8 @@ scia1_rect=scia1.get_rect(center=(50,375))
 scia2=pygame.image.load('triangle1.png').convert_alpha()
 scia2_rect=scia2.get_rect(center=(50,375))
 
+
+
 end_text1=font1.render('PLAYER1 IS THE WINNER',False,'red')
 end_text_rec1=end_text1.get_rect(center=(600,300))
 
@@ -153,7 +155,7 @@ def OPTIONS_MENU():
     pygame.display.flip()
     return PvP_text_rect, Duo_text_rect
 
-def GAME_SCREEN():
+def GAME_SCREEN(d,d2):
     global player1_rec, player2_rec, INIZIO_PARTITA,SCHERMATA_MENU, scia1_rect, trail1_positions, scia2_rect, trail2_positions
     
     screen.fill('black')
@@ -175,26 +177,52 @@ def GAME_SCREEN():
         player2_rec.left=0    
     if player2_rec.right > 1200:
         player2_rec.right=1200     
+
+    print(d.values())
     
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player1_rec.y -= 5
-    if keys[pygame.K_s]:
-        player1_rec.y += 5
-    if keys[pygame.K_a]:
-        player1_rec.x -= 5
-    if keys[pygame.K_d]:
-        player1_rec.x += 5
-
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_UP]:
+    if keys[pygame.K_UP] or d2['su']:
         player2_rec.y -= 5
-    if keys[pygame.K_DOWN]:
+        for key in d2:
+            d2[key]=False
+        d2['su']=True
+    if keys[pygame.K_DOWN] or d2['giù']:
         player2_rec.y += 5
-    if keys[pygame.K_LEFT]:
+        for key in d2:
+            d2[key]=False
+        d2['giù']=True   
+    if keys[pygame.K_LEFT] or d2['destra']:
         player2_rec.x -= 5
-    if keys[pygame.K_RIGHT]:
+        for key in d2:
+            d2[key]=False
+        d2['destra']=True    
+    if keys[pygame.K_RIGHT]or d2['sinistra']:
         player2_rec.x += 5
+        for key in d2:
+            d2[key]=False
+        d2['sinistra']=True
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_w] or d['su']:
+        player1_rec.y -= 5
+        for key in d:
+            d[key]=False
+        d['su']=True
+    if keys[pygame.K_s] or d['giù']:
+        player1_rec.y += 5
+        for key in d:
+            d[key]=False
+        d['giù']=True
+    if keys[pygame.K_a] or d['destra']:
+        player1_rec.x -= 5
+        for key in d:
+            d[key]=False
+        d['destra']=True
+    if keys[pygame.K_d] or d['sinistra']:
+        player1_rec.x += 5
+        for key in d:
+            d[key]=False
+        d['sinistra']=True
 
     screen.blit(player1, player1_rec)
     screen.blit(player2,player2_rec)
@@ -227,25 +255,36 @@ def GAME_SCREEN():
 
 def display_end_screen(winner):
     global SCHERMATA_MENU, INIZIO_PARTITA, trail1_positions, trail2_positions
+    trail1_positions.clear()
+    trail2_positions.clear() 
     screen.fill('black')
     if winner == 1:
         screen.blit(end_text1, end_text_rec1)
     else:
         screen.blit(end_text2, end_text_rec2)
     screen.blit(end_text, end_text_rec)
-    pygame.display.flip()   
 
-    while True:
-        for ev in pygame.event.get():
-            if ev.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if ev.type == pygame.KEYDOWN and ev.key== pygame.K_SPACE:
-                SCHERMATA_MENU=True
-                INIZIO_PARTITA=False
-                trail1_positions.clear()
-                trail2_positions.clear()               
-                return
+    for ev in pygame.event.get():
+        if ev.type == pygame.KEYDOWN and ev.key== pygame.K_SPACE:
+            SCHERMATA_MENU=True            
+    
+    pygame.display.flip() 
+
+    return 
+
+
+d={}
+d['su']=False
+d['giù']=False
+d['destra']=False
+d['sinistra']=False  
+d2={}
+d2['su']=False
+d2['giù']=False
+d2['destra']=False
+d2['sinistra']=False 
+
+
 done = False
 PvP_text_rect, Duo_text_rect = None, None
 
@@ -254,12 +293,12 @@ while not done:
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             done=True
-        
-        if SCHERMATA_INIZIALE and ev.type == pygame.MOUSEBUTTONDOWN:
+            
+        elif SCHERMATA_INIZIALE and ev.type == pygame.MOUSEBUTTONDOWN:
             SCHERMATA_INIZIALE = False
             SCHERMATA_MENU = True
-        
-        if SCHERMATA_MENU:
+            
+        elif SCHERMATA_MENU:
             if ev.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if PvP_text_rect and Duo_text_rect:
@@ -269,14 +308,14 @@ while not done:
                     if Duo_text_rect.collidepoint(mouse_pos):
                         Duo = True
                         PvP = False
-            
-            if ev.type == pygame.KEYDOWN:
+                
+            elif ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_SPACE and (PvP or Duo):
-                    
+                        
                     player1_rec.center = (50, 375)
                     player2_rec.center = (1150, 375)                    
-                    
-                    
+                        
+                        
                     INIZIO_PARTITA = True
                     SCHERMATA_MENU = False
 
@@ -288,15 +327,17 @@ while not done:
         PvP_text_rect, Duo_text_rect =OPTIONS_MENU()
 
     elif INIZIO_PARTITA:
-        GAME_SCREEN()
+        GAME_SCREEN(d,d2)
+
 
     clock.tick(60)
-    
+        
     pygame.display.flip()
 
 
 
-pygame.quit()
-sys.exit()
+    pygame.quit()
+    sys.exit()
+
 
 
