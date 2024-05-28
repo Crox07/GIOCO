@@ -5,13 +5,16 @@ pygame.init()
 
 screen = pygame.display.set_mode((1200, 750))
 
-pygame.display.set_caption("SPACE WARS")
+pygame.display.set_caption("TRON RACER")
 
 clock=pygame.time.Clock()
 
 Initial_Screen=pygame.image.load('Schermata_inizio.jpg').convert_alpha()
 space=pygame.image.load('menu.jpg').convert_alpha()
 space=pygame.transform.scale(space, (1200,750))
+
+game_name=pygame.image.load('TRON_RACER.jpg')
+game_name_rect = game_name.get_rect(center=(600, 400))
 
 #options_screen=pygame.image.load('stars.jpg').convert_alpha()
 
@@ -70,6 +73,9 @@ d2['giù']=False
 d2['destra']=False
 d2['sinistra']=False 
 
+pygame.mixer.music.load("menu_song.ogg")
+pygame.mixer.music.play(-1)
+
 def TITLE_SCREEN():
     global SCHERMATA_INIZIALE
     
@@ -78,18 +84,8 @@ def TITLE_SCREEN():
             pygame.quit()
             sys.exit()
 
-
-
     screen.blit(Initial_Screen, (0, 0))
 
-    game_name = font1.render("Space Wars", True, (0, 0, 102))
-    game_name_rect = game_name.get_rect(center=(600, 400))
-
-    riq = pygame.Surface((600, 200))
-    riq_rec = riq.get_rect(center=(600, 375))
-    riq.fill('WHITE')
-    pygame.draw.rect(riq, (102, 204, 204), riq.get_rect(), 10)
-    screen.blit(riq, riq_rec)
     screen.blit(game_name, game_name_rect)
     
     pygame.display.flip()
@@ -174,30 +170,63 @@ def GAME_SCREEN(d,d2):
     
     if player1_rec.bottom > 750:
         player1_rec.bottom=750
+        for key in d.keys():
+            d[key] = False
+        d['su']=True
+
     if player1_rec.top < 0:
-        player1_rec.top=0   
+        player1_rec.top=0  
+        for key in d.keys():
+            d[key] = False
+        d['giù']=True
+
     if player1_rec.left < 0:
-        player1_rec.left=0    
+        player1_rec.left=0 
+        for key in d.keys():
+            d[key] = False
+        d['destra']=True
+
     if player1_rec.right > 1200:
         player1_rec.right=1200    
+        for key in d.keys():
+            d[key] = False
+        d['sinistra']=True
 
     if player2_rec.bottom > 750:
         player2_rec.bottom=750
+        for key in d2.keys():
+            d2[key] = False
+        d2['su']=True
+
     if player2_rec.top < 0:
-        player2_rec.top=0   
+        player2_rec.top=0
+        for key in d2.keys():
+            d2[key] = False
+        d2['giù']=True
+
     if player2_rec.left < 0:
-        player2_rec.left=0    
+        player2_rec.left=0
+        for key in d2.keys():
+            d2[key] = False
+        d2['destra']=True
+
     if player2_rec.right > 1200:
         player2_rec.right=1200     
+        for key in d2.keys():
+            d2[key] = False
+        d2['sinistra']=True
 
     print(d.values())
     
     keys = pygame.key.get_pressed()
+
+    
     if keys[pygame.K_UP] or d2['su']:
         player2_rec.y -= 5
         for key in d2:
             d2[key]=False
         d2['su']=True
+        
     if keys[pygame.K_DOWN] or d2['giù']:
         player2_rec.y += 5
         for key in d2:
@@ -225,16 +254,16 @@ def GAME_SCREEN(d,d2):
         for key in d:
             d[key]=False
         d['giù']=True
-    if keys[pygame.K_a] or d['destra']:
+    if keys[pygame.K_a] or d['sinistra']:
         player1_rec.x -= 5
         for key in d:
             d[key]=False
-        d['destra']=True
-    if keys[pygame.K_d] or d['sinistra']:
+        d['sinistra']=True
+    if keys[pygame.K_d] or d['destra']:
         player1_rec.x += 5
         for key in d:
             d[key]=False
-        d['sinistra']=True
+        d['destra']=True
 
     screen.blit(player1, player1_rec)
     screen.blit(player2,player2_rec)
@@ -313,17 +342,21 @@ while not done:
                 
             elif ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_SPACE and (PvP or Duo):
-                        
+                                     
+                    pygame.mixer.music.load("game_song.ogg")
+                    pygame.mixer.music.play(-1)
+                
                     player1_rec.center = (50, 375)
                     player2_rec.center = (1150, 375)                    
-                        
-                        
+                                     
                     INIZIO_PARTITA = True
                     SCHERMATA_MENU = False
 
         elif FINE_PARTITA and ev.type == pygame.KEYDOWN and ev.key == pygame.K_SPACE:
             FINE_PARTITA = False
             SCHERMATA_MENU=True
+            pygame.mixer.music.load("menu_song.ogg")
+            pygame.mixer.music.play(-1)
 
 
     if SCHERMATA_INIZIALE:
@@ -334,7 +367,6 @@ while not done:
 
     elif INIZIO_PARTITA:
         GAME_SCREEN(d,d2)
-
 
     clock.tick(60)
         
