@@ -1,1 +1,5 @@
-prova
+to do list:
+sitemare condizioni di vittoria a 3 e facendo in modo che vengano visualizzati i punti sullo schermo
+aggiungere power ups
+sistemare menu di selezione partita
+sistemare eventuali elementi grafici e rimuovere place holders
