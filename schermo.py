@@ -190,7 +190,7 @@ def GAME_SCREEN(d,d2):
     if player2_rec.right > 1200:
         player2_rec.right=1200     
 
-    print(d.values())
+
     
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP] or d2['su']:
