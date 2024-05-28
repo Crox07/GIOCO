@@ -55,8 +55,20 @@ trail2_positions=[]
 SCHERMATA_INIZIALE=True
 SCHERMATA_MENU=False
 INIZIO_PARTITA=False
+FINE_PARTITA=False
 PvP=False
 Duo=False
+
+d={}
+d['su']=False
+d['giù']=False
+d['destra']=False
+d['sinistra']=False  
+d2={}
+d2['su']=False
+d2['giù']=False
+d2['destra']=False
+d2['sinistra']=False 
 
 def TITLE_SCREEN():
     global SCHERMATA_INIZIALE
@@ -158,7 +170,6 @@ def OPTIONS_MENU():
 
 def GAME_SCREEN(d,d2):
     global player1_rec, player2_rec, INIZIO_PARTITA,SCHERMATA_MENU, scia1_rect, trail1_positions, scia2_rect, trail2_positions
-    
     screen.fill('black')
     
     if player1_rec.bottom > 750:
@@ -192,16 +203,16 @@ def GAME_SCREEN(d,d2):
         for key in d2:
             d2[key]=False
         d2['giù']=True   
-    if keys[pygame.K_LEFT] or d2['destra']:
+    if keys[pygame.K_LEFT] or d2['sinistra']:
         player2_rec.x -= 5
         for key in d2:
             d2[key]=False
-        d2['destra']=True    
-    if keys[pygame.K_RIGHT]or d2['sinistra']:
+        d2['sinistra']=True    
+    if keys[pygame.K_RIGHT]or d2['destra']:
         player2_rec.x += 5
         for key in d2:
             d2[key]=False
-        d2['sinistra']=True
+        d2['destra']=True
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_w] or d['su']:
@@ -255,7 +266,7 @@ def GAME_SCREEN(d,d2):
     pygame.display.flip()
 
 def display_end_screen(winner):
-    global SCHERMATA_MENU, INIZIO_PARTITA, trail1_positions, trail2_positions
+    global SCHERMATA_MENU, INIZIO_PARTITA, FINE_PARTITA, trail1_positions, trail2_positions
     trail1_positions.clear()
     trail2_positions.clear() 
     screen.fill('black')
@@ -265,25 +276,15 @@ def display_end_screen(winner):
         screen.blit(end_text2, end_text_rec2)
     screen.blit(end_text, end_text_rec)
 
-    for ev in pygame.event.get():
-        if ev.type == pygame.KEYDOWN and ev.key== pygame.K_SPACE:
-            SCHERMATA_MENU=True            
+    FINE_PARTITA=True
+
+    for key in d.keys():
+        d[key] = False
+
+    for key in d2.keys():
+        d2[key] = False
     
     pygame.display.flip() 
-
-    return 
-
-
-d={}
-d['su']=False
-d['giù']=False
-d['destra']=False
-d['sinistra']=False  
-d2={}
-d2['su']=False
-d2['giù']=False
-d2['destra']=False
-d2['sinistra']=False 
 
 
 done = False
@@ -320,6 +321,10 @@ while not done:
                     INIZIO_PARTITA = True
                     SCHERMATA_MENU = False
 
+        elif FINE_PARTITA and ev.type == pygame.KEYDOWN and ev.key == pygame.K_SPACE:
+            FINE_PARTITA = False
+            SCHERMATA_MENU=True
+
 
     if SCHERMATA_INIZIALE:
         TITLE_SCREEN()
@@ -337,8 +342,8 @@ while not done:
 
 
 
-    pygame.quit()
-    sys.exit()
+pygame.quit()
+sys.exit()
 
 
 
