@@ -31,18 +31,11 @@ player1_rec=player1.get_rect(center=(50,375))
 tron=pygame.image.load('tron2.png').convert_alpha()
 tron_rec=tron.get_rect(center=(600,375))
 
-player2=pygame.image.load('triangle1.png').convert_alpha()
+player2=pygame.image.load('tronmototorbike.png').convert_alpha()
 player2_rec=player2.get_rect(center=(1150,375))
-
-blue_circle=pygame.image.load('bluecircle.png').convert_alpha()
-blue_circle_rec=blue_circle.get_rect(center=(50,375))
-
-orange_circle=pygame.image.load('bluecircle.png').convert_alpha()
-orange_circle_rec=orange_circle.get_rect(center=(1150,375))
 
 scia1=pygame.image.load('bluecircle.png').convert_alpha()
 scia1_rect=scia1.get_rect(center=(50,375))
-
 
 scia2=pygame.image.load('orangecircle.png').convert_alpha()
 scia2_rect=scia2.get_rect(center=(50,375))
@@ -172,126 +165,107 @@ def OPTIONS_MENU():
     return PvP_text_rect, Duo_text_rect
 
 def GAME_SCREEN(d,d2):
-    global player1_rec,blue_circle_rec,orange_circle_rec, player2_rec, INIZIO_PARTITA,SCHERMATA_MENU, scia1_rect, trail1_positions, scia2_rect, trail2_positions
+    global player1_rec, player2_rec, INIZIO_PARTITA,SCHERMATA_MENU, scia1_rect, trail1_positions, scia2_rect, trail2_positions
     screen.fill('black')
     
     if player1_rec.bottom > 750:
         player1_rec.bottom=750
-        blue_circle_rec.bottom=750
         for key in d.keys():
             d[key] = False
         d['su']=True
 
     if player1_rec.top < 0:
-        player1_rec.top=0 
-        blue_circle_rec.top=0 
+        player1_rec.top=0  
         for key in d.keys():
             d[key] = False
         d['giù']=True
 
     if player1_rec.left < 0:
         player1_rec.left=0 
-        blue_circle_rec.left=0
         for key in d.keys():
             d[key] = False
         d['destra']=True
 
     if player1_rec.right > 1200:
-        player1_rec.right=1200 
-        blue_circle_rec.right=1200   
+        player1_rec.right=1200    
         for key in d.keys():
             d[key] = False
         d['sinistra']=True
 
     if player2_rec.bottom > 750:
         player2_rec.bottom=750
-        orange_circle_rec=750
         for key in d2.keys():
             d2[key] = False
         d2['su']=True
 
     if player2_rec.top < 0:
         player2_rec.top=0
-        orange_circle_rec.top=0
         for key in d2.keys():
             d2[key] = False
         d2['giù']=True
 
     if player2_rec.left < 0:
         player2_rec.left=0
-        orange_circle_rec.left=0
         for key in d2.keys():
             d2[key] = False
         d2['destra']=True
 
     if player2_rec.right > 1200:
         player2_rec.right=1200     
-        orange_circle_rec.right=1200
         for key in d2.keys():
             d2[key] = False
         d2['sinistra']=True
 
-
+ 
     
     keys = pygame.key.get_pressed()
 
     
     if keys[pygame.K_UP] or d2['su']:
-        player2_rec.y -= 7
-        orange_circle_rec.y-=7
+        player2_rec.y -= 5
         for key in d2:
             d2[key]=False
         d2['su']=True
         
     if keys[pygame.K_DOWN] or d2['giù']:
-        player2_rec.y += 7
-        orange_circle_rec.y+=7
+        player2_rec.y += 5
         for key in d2:
             d2[key]=False
         d2['giù']=True   
     if keys[pygame.K_LEFT] or d2['sinistra']:
-        player2_rec.x -= 7
-        orange_circle_rec.x-=7
+        player2_rec.x -= 5
         for key in d2:
             d2[key]=False
         d2['sinistra']=True    
     if keys[pygame.K_RIGHT]or d2['destra']:
-        player2_rec.x += 7
-        orange_circle_rec.x+=7
+        player2_rec.x += 5
         for key in d2:
             d2[key]=False
         d2['destra']=True
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_w] or d['su']:
-        player1_rec.y -=7
-        blue_circle_rec.y -= 7
+        player1_rec.y -= 5
         for key in d:
             d[key]=False
         d['su']=True
     if keys[pygame.K_s] or d['giù']:
-        player1_rec.y +=7
-        blue_circle_rec.y += 7
+        player1_rec.y += 5
         for key in d:
             d[key]=False
         d['giù']=True
     if keys[pygame.K_a] or d['sinistra']:
-        player1_rec.x -=7
-        blue_circle_rec.x -=7
+        player1_rec.x -= 5
         for key in d:
             d[key]=False
         d['sinistra']=True
     if keys[pygame.K_d] or d['destra']:
-        player1_rec.x+=7
-        blue_circle_rec.x += 7
+        player1_rec.x += 5
         for key in d:
             d[key]=False
         d['destra']=True
 
-    screen.blit(orange_circle,orange_circle_rec)
-    screen.blit(blue_circle,blue_circle_rec)
-    screen.blit(player1, player1_rec)
-    screen.blit(player2,player2_rec)
+
 
     trail1_positions.append((player1_rec.x, player1_rec.y))
     trail2_positions.append((player2_rec.x, player2_rec.y))
@@ -301,10 +275,14 @@ def GAME_SCREEN(d,d2):
 
     if len(trail2_positions) > 80:
         trail2_positions.pop(0)
-    
+
+  
+
     for posizione in trail1_positions:
+        
         scia1_rect.topleft = posizione
         screen.blit(scia1,scia1_rect)
+        screen.blit(player1, player1_rec)
         if player2_rec.colliderect(scia1_rect):
             INIZIO_PARTITA = False
             display_end_screen(winner=1)
@@ -312,17 +290,18 @@ def GAME_SCREEN(d,d2):
     for posizione in trail2_positions:
         scia2_rect.topleft = posizione
         screen.blit(scia2,scia2_rect)
+        screen.blit(player2,player2_rec) 
         if player1_rec.colliderect(scia2_rect):
             INIZIO_PARTITA = False
             display_end_screen(winner=2)
           
-    
+
     pygame.display.flip()
 
 def display_end_screen(winner):
     global SCHERMATA_MENU, INIZIO_PARTITA, FINE_PARTITA, trail1_positions, trail2_positions
     trail1_positions.clear()
-    trail2_positions.clear() 
+    trail2_positions.clear()
     screen.fill('black')
     if winner == 1:
         screen.blit(end_text1, end_text_rec1)
