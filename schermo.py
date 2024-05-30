@@ -60,7 +60,7 @@ SCHERMATA_MENU=False
 INIZIO_PARTITA=False
 FINE_PARTITA=False
 PvP=False
-Duo=False
+exit1=False
 
 d={}
 d['su']=False
@@ -91,7 +91,7 @@ def TITLE_SCREEN():
     pygame.display.flip()
 
 def OPTIONS_MENU():
-    global PvP, Duo
+    global PvP, exit1
     
     for ev in pygame.event.get():
         if ev.type==pygame.QUIT:
@@ -115,10 +115,11 @@ def OPTIONS_MENU():
     else:
         PvP_color=(0, 0, 102)
     
-    if Duo:
-        Duo_color=('red')
+    if exit1:
+        pygame.quit()
+        sys.exit
     else:
-        Duo_color=(0, 0, 102)
+        exit1_color=(0, 0, 102)
 
     PvP_text=font2.render("PvP", True, (PvP_color))
     PvP_text_rect=PvP_text.get_rect(center=(200,200))
@@ -130,14 +131,14 @@ def OPTIONS_MENU():
     surface1.blit(PvP_text,PvP_text_rect)
     screen.blit(surface1,surf_rect)
     
-    Duo_text=font2.render("Duo", True, Duo_color)
-    Duo_text_rect=Duo_text.get_rect(center=(1000,200))
+    exit1_text=font2.render("Exit", True, exit1_color)
+    exit1_text_rect=exit1_text.get_rect(center=(1000,200))
     
     surface2=pygame.Surface((200,100))
     surf_rect2=surface2.get_rect(center=(1000,200))
     surface2.fill('grey')
     pygame.draw.rect(surface2,(76,45,125),surface2.get_rect(),5)     
-    surface2.blit(Duo_text,Duo_text_rect)
+    surface2.blit(exit1_text,exit1_text_rect)
     screen.blit(surface2,surf_rect2)
     
 
@@ -146,23 +147,23 @@ def OPTIONS_MENU():
         if ev.type == pygame.MOUSEBUTTONDOWN:
             if PvP_text_rect.collidepoint(mouse_pos):
                 PvP=True
-                Duo=False
+                exit1=False
 
-            if  Duo_text_rect.collidepoint(mouse_pos):
-                Duo=True
+            if  exit1_text_rect.collidepoint(mouse_pos):
+                exit1=True
                 PvP=False
 
 
     screen.blit(PvP_text, PvP_text_rect)
-    screen.blit(Duo_text, Duo_text_rect)
+    screen.blit(exit1_text, exit1_text_rect)
 
-    if PvP or Duo:
+    if PvP or exit1:
         play_text=font2.render("Press space to play", True, 'white')
         play_text_rect=play_text.get_rect(center=(600,600))
         screen.blit(play_text, play_text_rect)
     
     pygame.display.flip()
-    return PvP_text_rect, Duo_text_rect
+    return PvP_text_rect, exit1_text_rect
 
 def GAME_SCREEN(d,d2):
     global player1_rec, player2_rec, INIZIO_PARTITA,SCHERMATA_MENU, scia1_rect, trail1_positions, scia2_rect, trail2_positions
@@ -321,7 +322,7 @@ def display_end_screen(winner):
 
 
 done = False
-PvP_text_rect, Duo_text_rect = None, None
+PvP_text_rect, exit1_text_rect = None, None
 
 while not done:
 
@@ -336,16 +337,16 @@ while not done:
         elif SCHERMATA_MENU:
             if ev.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                if PvP_text_rect and Duo_text_rect:
+                if PvP_text_rect and exit1_text_rect:
                     if PvP_text_rect.collidepoint(mouse_pos):
                         PvP = True
-                        Duo = False
-                    if Duo_text_rect.collidepoint(mouse_pos):
-                        Duo = True
+                        exit1 = False
+                    if exit1_text_rect.collidepoint(mouse_pos):
+                        exit1 = True
                         PvP = False
                 
             elif ev.type == pygame.KEYDOWN:
-                if ev.key == pygame.K_SPACE and (PvP or Duo):
+                if ev.key == pygame.K_SPACE and (PvP or exit1):
                                      
                     pygame.mixer.music.load("game_song.ogg")
                     pygame.mixer.music.play(-1)
@@ -367,7 +368,7 @@ while not done:
         TITLE_SCREEN()
 
     elif SCHERMATA_MENU:
-        PvP_text_rect, Duo_text_rect =OPTIONS_MENU()
+        PvP_text_rect, exit1_text_rect =OPTIONS_MENU()
 
     elif INIZIO_PARTITA:
         GAME_SCREEN(d,d2)
