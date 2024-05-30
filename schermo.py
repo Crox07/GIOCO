@@ -61,6 +61,7 @@ INIZIO_PARTITA=False
 FINE_PARTITA=False
 PvP=False
 exit1=False
+done = False
 
 d={}
 d['su']=False
@@ -110,14 +111,19 @@ def OPTIONS_MENU():
     pygame.draw.line(screen,'white',(780,0), (780, 750),10)
     screen.blit(tron,tron_rec)
     if PvP:
-        PvP_color=('red') 
+        PvP_color=('red')
+        play_text=font2.render("Press space to play", True, 'white')
+        play_text_rect=play_text.get_rect(center=(600,600))
+        screen.blit(play_text, play_text_rect)
 
     else:
         PvP_color=(0, 0, 102)
     
     if exit1:
-        pygame.quit()
-        sys.exit
+        exit1_color=('red')
+        exit_text=font2.render("Press space to exit", True, 'white')
+        exit_text_rect=exit_text.get_rect(center=(600,600))
+        screen.blit(exit_text, exit_text_rect)
     else:
         exit1_color=(0, 0, 102)
 
@@ -157,10 +163,6 @@ def OPTIONS_MENU():
     screen.blit(PvP_text, PvP_text_rect)
     screen.blit(exit1_text, exit1_text_rect)
 
-    if PvP or exit1:
-        play_text=font2.render("Press space to play", True, 'white')
-        play_text_rect=play_text.get_rect(center=(600,600))
-        screen.blit(play_text, play_text_rect)
     
     pygame.display.flip()
     return PvP_text_rect, exit1_text_rect
@@ -321,7 +323,6 @@ def display_end_screen(winner):
     pygame.display.flip() 
 
 
-done = False
 PvP_text_rect, exit1_text_rect = None, None
 
 while not done:
@@ -346,16 +347,20 @@ while not done:
                         PvP = False
                 
             elif ev.type == pygame.KEYDOWN:
-                if ev.key == pygame.K_SPACE and (PvP or exit1):
+                if ev.key == pygame.K_SPACE:
+                    if PvP:
                                      
-                    pygame.mixer.music.load("game_song.ogg")
-                    pygame.mixer.music.play(-1)
+                        pygame.mixer.music.load("game_song.ogg")
+                        pygame.mixer.music.play(-1)
                 
-                    player1_rec.center = (50, 375)
-                    player2_rec.center = (1150, 375)                    
+                        player1_rec.center = (50, 375)
+                        player2_rec.center = (1150, 375)                    
                                      
-                    INIZIO_PARTITA = True
-                    SCHERMATA_MENU = False
+                        INIZIO_PARTITA = True
+                        SCHERMATA_MENU = False
+                    if exit1:
+                        pygame.QUIT
+                        sys.exit()
 
         elif FINE_PARTITA and ev.type == pygame.KEYDOWN and ev.key == pygame.K_SPACE:
             FINE_PARTITA = False
