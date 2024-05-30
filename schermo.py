@@ -40,8 +40,8 @@ controls2 = {'su': pygame.K_UP, 'giù': pygame.K_DOWN, 'sinistra': pygame.K_LEFT
 pygame.mixer.music.load("menu_song.ogg")
 pygame.mixer.music.play(-1)
 
-player1=Player('triangle1.png', (50,375), scia1)
-player2=Player('tronmotorbike.png', (1150,375), scia2)
+player1=Player('triangle1.png', (100,375), scia1)
+player2=Player('tronmotorbike.png', (1100,375), scia2)
 
 SCHERMATA_INIZIALE=True
 SCHERMATA_MENU=False
