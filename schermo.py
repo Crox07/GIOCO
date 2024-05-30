@@ -147,9 +147,6 @@ def GAME_SCREEN():
 
     keys = pygame.key.get_pressed()
 
-    player1.reset()
-    player2.reset()
-
     player1.movimenti(keys, controls1)
     player2.movimenti(keys, controls2)
 
@@ -207,13 +204,13 @@ while not done:
                 
             elif ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_SPACE:
-                    if PvP:             
+                    if PvP:            
                         pygame.mixer.music.load("game_song.ogg")
-                        pygame.mixer.music.play(-1)
-                        player1.reset()
-                        player2.reset()                           
+                        pygame.mixer.music.play(-1)                         
                         INIZIO_PARTITA = True
                         SCHERMATA_MENU = False
+                        player1.reset()
+                        player2.reset()  
                     if exit1:
                         pygame.QUIT
                         sys.exit()
