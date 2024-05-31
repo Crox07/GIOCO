@@ -88,7 +88,4 @@ class Player:
             trail_rect= self.trail_image.get_rect(topleft=posizione)
             if self.rect.colliderect(trail_rect):
                 return True
-        return False
-    
-
-    
+        return False 

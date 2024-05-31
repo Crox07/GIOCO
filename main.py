@@ -71,6 +71,9 @@ def TITLE_SCREEN():
 def OPTIONS_MENU():
     global PvP, exit1
     
+    player1.punti=0
+    player2.punti=0
+    
     for ev in pygame.event.get():
         if ev.type==pygame.QUIT:
             pygame.quit()
@@ -145,7 +148,7 @@ def OPTIONS_MENU():
     return PvP_text_rect, exit1_text_rect
 
 def GAME_SCREEN():
-    global INIZIO_PARTITA,FINE_PARTITA
+    global INIZIO_PARTITA, FINE_PARTITA
     screen.fill('black')
 
     keys = pygame.key.get_pressed()
@@ -160,9 +163,9 @@ def GAME_SCREEN():
         player2.add_point()
         player1.reset()
         player2.reset()
-        if player1.vittoria():
+        if player2.vittoria():
             display_end_screen(2)
-            FINE_PARTITA=True
+            INIZIO_PARTITA = False
 
     if player2.controllo_collisioni(player1.trail_pos):
         player1.add_point()
@@ -170,14 +173,10 @@ def GAME_SCREEN():
         player2.reset()
         if player1.vittoria():
             display_end_screen(1)
-            FINE_PARTITA=True
-
-
-    
-    if player1.vittoria():
-        display_end_screen(1)
+            INIZIO_PARTITA = False
 
     pygame.display.flip()
+
 
 def display_end_screen(winner):
     global SCHERMATA_MENU, INIZIO_PARTITA, FINE_PARTITA
@@ -191,17 +190,16 @@ def display_end_screen(winner):
         screen.blit(end_text2, end_text_rec2)
     screen.blit(end_text, end_text_rec)
 
-    FINE_PARTITA=True
+    FINE_PARTITA = True
 
-    pygame.display.flip() 
+    pygame.display.flip()
 
-PvP_text_rect, exit1_text_rect = None, None
 
 while not done:
 
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
-            done=True
+            done = True
             
         elif SCHERMATA_INIZIALE and ev.type == pygame.MOUSEBUTTONDOWN:
             SCHERMATA_INIZIALE = False
@@ -228,17 +226,18 @@ while not done:
                         player1.reset()
                         player2.reset()  
                     if exit1:
-                        pygame.QUIT
+                        pygame.quit()
                         sys.exit()
 
         elif FINE_PARTITA and ev.type == pygame.KEYDOWN and ev.key == pygame.K_SPACE:
             FINE_PARTITA = False
-            SCHERMATA_MENU=True
+            SCHERMATA_MENU = True
             player1.reset()
-            player2.reset()   
+            player2.reset()
+            INIZIO_PARTITA = False
+                        
             pygame.mixer.music.load("menu_song.ogg")
             pygame.mixer.music.play(-1)
-
 
     if SCHERMATA_INIZIALE:
         TITLE_SCREEN()
@@ -253,9 +252,9 @@ while not done:
         
     pygame.display.flip()
 
-
 pygame.quit()
 sys.exit()
+
 
 
 
