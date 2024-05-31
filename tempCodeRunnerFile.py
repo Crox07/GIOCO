@@ -40,8 +40,11 @@ controls2 = {'su': pygame.K_UP, 'giù': pygame.K_DOWN, 'sinistra': pygame.K_LEFT
 pygame.mixer.music.load("menu_song.ogg")
 pygame.mixer.music.play(-1)
 
-player1=Player('triangle1.png', (50,375), scia1)
-player2=Player('tronmotorbike.png', (1150,375), scia2)
+player1=Player('triangle1.png', (100,375), scia1)
+player2=Player('tronmotorbike.png', (1100,375), scia2)
+
+player1.punti=0
+player2.punti=0
 
 SCHERMATA_INIZIALE=True
 SCHERMATA_MENU=False
@@ -146,24 +149,22 @@ def GAME_SCREEN():
     screen.fill('black')
 
     keys = pygame.key.get_pressed()
-    
+
     player1.movimenti(keys, controls1)
     player2.movimenti(keys, controls2)
 
     player1.disegno_player_e_scia(screen)
-    player1.disegno_player_e_scia(screen)
+    player2.disegno_player_e_scia(screen)
 
-
+while not player1.vittoria() and not player2.vittoria():
     if player1.controllo_collisioni(player2.trail_pos):
-            INIZIO_PARTITA = False
-            display_end_screen(winner=1)
-
+        player1.add_point()
+        INIZIO_PARTITA=True
     if player2.controllo_collisioni(player1.trail_pos):
-            INIZIO_PARTITA = False
-            display_end_screen(winner=2)
+        player2.add_point()
+        INIZIO_PARTITA=True
 
     pygame.display.flip()
-
 
 def display_end_screen(winner):
     global SCHERMATA_MENU, INIZIO_PARTITA, FINE_PARTITA
@@ -206,13 +207,13 @@ while not done:
                 
             elif ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_SPACE:
-                    if PvP:             
+                    if PvP:            
                         pygame.mixer.music.load("game_song.ogg")
-                        pygame.mixer.music.play(-1)
-                        player1.rect.center = (50, 375)
-                        player2.rect.center = (1150, 375)                            
+                        pygame.mixer.music.play(-1)                         
                         INIZIO_PARTITA = True
                         SCHERMATA_MENU = False
+                        player1.reset()
+                        player2.reset()  
                     if exit1:
                         pygame.QUIT
                         sys.exit()
@@ -220,6 +221,8 @@ while not done:
         elif FINE_PARTITA and ev.type == pygame.KEYDOWN and ev.key == pygame.K_SPACE:
             FINE_PARTITA = False
             SCHERMATA_MENU=True
+            player1.reset()
+            player2.reset()   
             pygame.mixer.music.load("menu_song.ogg")
             pygame.mixer.music.play(-1)
 
@@ -232,11 +235,16 @@ while not done:
 
     elif INIZIO_PARTITA:
         GAME_SCREEN()
+        if player1.vittoria():
+            display_end_screen(1)
+            INIZIO_PARTITA = False
+        elif player2.vittoria():
+            display_end_screen(2)
+            INIZIO_PARTITA = False
 
     clock.tick(60)
         
     pygame.display.flip()
-
 
 
 pygame.quit()

@@ -8,7 +8,14 @@ class Player:
         self.trail_pos=[]
         self.direction = {'su': False, 'giù': False, 'destra': False, 'sinistra':False}
         self.trail_image= trail_image
+        self.punti=0
 
+    def add_point(self):
+        self.punti+=1
+    
+    def vittoria(self):
+        return self.punti >=3
+    
     def reset(self):
 
         self.rect.center = self.start_pos
@@ -82,4 +89,6 @@ class Player:
             if self.rect.colliderect(trail_rect):
                 return True
         return False
+    
+
     

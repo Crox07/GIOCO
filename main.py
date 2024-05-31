@@ -43,6 +43,9 @@ pygame.mixer.music.play(-1)
 player1=Player('triangle1.png', (100,375), scia1)
 player2=Player('tronmotorbike.png', (1100,375), scia2)
 
+player1.punti=0
+player2.punti=0
+
 SCHERMATA_INIZIALE=True
 SCHERMATA_MENU=False
 INIZIO_PARTITA=False
@@ -153,13 +156,13 @@ def GAME_SCREEN():
     player1.disegno_player_e_scia(screen)
     player2.disegno_player_e_scia(screen)
 
+while not player1.vittoria() and not player2.vittoria():
     if player1.controllo_collisioni(player2.trail_pos):
-            INIZIO_PARTITA = False
-            display_end_screen(winner=2)
-
+        player1.add_point()
+        INIZIO_PARTITA=True
     if player2.controllo_collisioni(player1.trail_pos):
-            INIZIO_PARTITA = False
-            display_end_screen(winner=1)
+        player2.add_point()
+        INIZIO_PARTITA=True
 
     pygame.display.flip()
 
@@ -232,6 +235,12 @@ while not done:
 
     elif INIZIO_PARTITA:
         GAME_SCREEN()
+        if player1.vittoria():
+            display_end_screen(1)
+            INIZIO_PARTITA = False
+        elif player2.vittoria():
+            display_end_screen(2)
+            INIZIO_PARTITA = False
 
     clock.tick(60)
         
