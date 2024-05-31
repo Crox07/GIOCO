@@ -145,7 +145,7 @@ def OPTIONS_MENU():
     return PvP_text_rect, exit1_text_rect
 
 def GAME_SCREEN():
-    global INIZIO_PARTITA,SCHERMATA_MENU 
+    global INIZIO_PARTITA,FINE_PARTITA
     screen.fill('black')
 
     keys = pygame.key.get_pressed()
@@ -156,13 +156,26 @@ def GAME_SCREEN():
     player1.disegno_player_e_scia(screen)
     player2.disegno_player_e_scia(screen)
 
-while not player1.vittoria() and not player2.vittoria():
     if player1.controllo_collisioni(player2.trail_pos):
-        player1.add_point()
-        INIZIO_PARTITA=True
-    if player2.controllo_collisioni(player1.trail_pos):
         player2.add_point()
-        INIZIO_PARTITA=True
+        player1.reset()
+        player2.reset()
+        if player1.vittoria():
+            display_end_screen(2)
+            FINE_PARTITA=True
+
+    if player2.controllo_collisioni(player1.trail_pos):
+        player1.add_point()
+        player1.reset()
+        player2.reset()
+        if player1.vittoria():
+            display_end_screen(1)
+            FINE_PARTITA=True
+
+
+    
+    if player1.vittoria():
+        display_end_screen(1)
 
     pygame.display.flip()
 
@@ -235,12 +248,6 @@ while not done:
 
     elif INIZIO_PARTITA:
         GAME_SCREEN()
-        if player1.vittoria():
-            display_end_screen(1)
-            INIZIO_PARTITA = False
-        elif player2.vittoria():
-            display_end_screen(2)
-            INIZIO_PARTITA = False
 
     clock.tick(60)
         
