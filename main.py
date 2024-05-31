@@ -1,4 +1,5 @@
-import pygame, sys
+import pygame
+import sys
 from pygame.locals import *
 from classe_player import Player
 
@@ -6,33 +7,32 @@ pygame.init()
 
 screen = pygame.display.set_mode((1200, 750))
 pygame.display.set_caption("TRON RACER")
-clock=pygame.time.Clock()
+clock = pygame.time.Clock()
 
-Initial_Screen=pygame.image.load('Schermata_inizio.jpg').convert_alpha()
-space=pygame.image.load('menu.jpg').convert_alpha()
-space=pygame.transform.scale(space, (1200,750))
+Initial_Screen = pygame.image.load('Schermata_inizio.jpg').convert_alpha()
+space = pygame.image.load('menu.jpg').convert_alpha()
+space = pygame.transform.scale(space, (1200, 750))
 
-game_name=pygame.image.load('TRON_RACER.jpg')
+game_name = pygame.image.load('TRON_RACER.jpg')
 game_name_rect = game_name.get_rect(center=(600, 400))
 
-font1=pygame.font.Font('Pixeltype.ttf', 150)
-font2=pygame.font.Font('Pixeltype.ttf', 120)
+font1 = pygame.font.Font('Pixeltype.ttf', 150)
+font2 = pygame.font.Font('Pixeltype.ttf', 120)
 
-tron=pygame.image.load('tron2.png').convert_alpha()
-tron_rec=tron.get_rect(center=(600,375))
+tron = pygame.image.load('tron2.png').convert_alpha()
+tron_rec = tron.get_rect(center=(600, 375))
 
-scia1=pygame.image.load('bluecircle.png').convert_alpha()
-scia2=pygame.image.load('orangecircle.png').convert_alpha()
+scia1 = pygame.image.load('bluecircle.png').convert_alpha()
+scia2 = pygame.image.load('orangecircle.png').convert_alpha()
 
+end_text1 = font1.render('PLAYER1 IS THE WINNER', False, 'red')
+end_text_rec1 = end_text1.get_rect(center=(600, 300))
 
-end_text1=font1.render('PLAYER1 IS THE WINNER',False,'red')
-end_text_rec1=end_text1.get_rect(center=(600,300))
+end_text2 = font1.render('PLAYER2 IS THE WINNER', False, 'red')
+end_text_rec2 = end_text2.get_rect(center=(600, 300))
 
-end_text2=font1.render('PLAYER2 IS THE WINNER',False,'red')
-end_text_rec2=end_text2.get_rect(center=(600,300))
-
-end_text=font2.render('Press space to play again',False,'white')
-end_text_rec=end_text2.get_rect(center=(600,475))
+end_text = font2.render('Press space to play again', False, 'white')
+end_text_rec = end_text.get_rect(center=(600, 475))
 
 controls1 = {'su': pygame.K_w, 'giù': pygame.K_s, 'sinistra': pygame.K_a, 'destra': pygame.K_d}
 controls2 = {'su': pygame.K_UP, 'giù': pygame.K_DOWN, 'sinistra': pygame.K_LEFT, 'destra': pygame.K_RIGHT}
@@ -40,30 +40,29 @@ controls2 = {'su': pygame.K_UP, 'giù': pygame.K_DOWN, 'sinistra': pygame.K_LEFT
 pygame.mixer.music.load("menu_song.ogg")
 pygame.mixer.music.play(-1)
 
-player1=Player('triangle1.png', (100,375), scia1)
-player2=Player('tronmotorbike.png', (1100,375), scia2)
+player1 = Player('tronmotorbike2.png', (100, 375), scia1, 0)
+player2 = Player('tronmotorbike2.png', (1100, 375), scia2, 180)
 
-player1.punti=0
-player2.punti=0
+player1.punti = 0
+player2.punti = 0
 
-SCHERMATA_INIZIALE=True
-SCHERMATA_MENU=False
-INIZIO_PARTITA=False
-FINE_PARTITA=False
-PvP=False
-exit1=False
+SCHERMATA_INIZIALE = True
+SCHERMATA_MENU = False
+INIZIO_PARTITA = False
+FINE_PARTITA = False
+PvP = False
+exit1 = False
 done = False
 
 def TITLE_SCREEN():
     global SCHERMATA_INIZIALE
     
     for ev in pygame.event.get():
-        if ev.type==pygame.QUIT:
+        if ev.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
     screen.blit(Initial_Screen, (0, 0))
-
     screen.blit(game_name, game_name_rect)
     
     pygame.display.flip()
@@ -71,79 +70,73 @@ def TITLE_SCREEN():
 def OPTIONS_MENU():
     global PvP, exit1
     
-    player1.punti=0
-    player2.punti=0
+    player1.punti = 0
+    player2.punti = 0
     
     for ev in pygame.event.get():
-        if ev.type==pygame.QUIT:
+        if ev.type == pygame.QUIT:
             pygame.quit()
             sys.exit()   
     
+    mouse_pos = pygame.mouse.get_pos()
+    screen.blit(space, (0, 0)) 
     
-    mouse_pos=pygame.mouse.get_pos()
-    screen.blit(space,(0,0)) 
-    
-    sfon_mot=pygame.Surface((350,750))
-    sfon_mot_rec=sfon_mot.get_rect(midbottom=(600,750))
+    sfon_mot = pygame.Surface((350, 750))
+    sfon_mot_rec = sfon_mot.get_rect(midbottom=(600, 750))
     sfon_mot.fill('black')
-    screen.blit(sfon_mot,sfon_mot_rec)
-    pygame.draw.line(screen,'white',(420,0), (420, 750),10)
-    pygame.draw.line(screen,'white',(780,0), (780, 750),10)
-    screen.blit(tron,tron_rec)
+    screen.blit(sfon_mot, sfon_mot_rec)
+    pygame.draw.line(screen, 'white', (420, 0), (420, 750), 10)
+    pygame.draw.line(screen, 'white', (780, 0), (780, 750), 10)
+    screen.blit(tron, tron_rec)
+    
     if PvP:
-        PvP_color=('red')
-        play_text=font2.render("Press space to play", True, 'white')
-        play_text_rect=play_text.get_rect(center=(600,600))
+        PvP_color = 'red'
+        play_text = font2.render("Press space to play", True, 'white')
+        play_text_rect = play_text.get_rect(center=(600, 600))
         screen.blit(play_text, play_text_rect)
-
     else:
-        PvP_color=(0, 0, 102)
+        PvP_color = (0, 0, 102)
     
     if exit1:
-        exit1_color=('red')
-        exit_text=font2.render("Press space to exit", True, 'white')
-        exit_text_rect=exit_text.get_rect(center=(600,600))
+        exit1_color = 'red'
+        exit_text = font2.render("Press space to exit", True, 'white')
+        exit_text_rect = exit_text.get_rect(center=(600, 600))
         screen.blit(exit_text, exit_text_rect)
     else:
-        exit1_color=(0, 0, 102)
+        exit1_color = (0, 0, 102)
 
-    PvP_text=font2.render("PvP", True, (PvP_color))
-    PvP_text_rect=PvP_text.get_rect(center=(200,200))
+    PvP_text = font2.render("PvP", True, PvP_color)
+    PvP_text_rect = PvP_text.get_rect(center=(200, 200))
     
-    surface1=pygame.Surface((200,100))
-    surf_rect=surface1.get_rect(center=(200,200))
+    surface1 = pygame.Surface((200, 100))
+    surf_rect = surface1.get_rect(center=(200, 200))
     surface1.fill('grey')
-    pygame.draw.rect(surface1,(76,45,125),surface1.get_rect(),5)
-    surface1.blit(PvP_text,PvP_text_rect)
-    screen.blit(surface1,surf_rect)
+    pygame.draw.rect(surface1, (76, 45, 125), surface1.get_rect(), 5)
+    surface1.blit(PvP_text, PvP_text_rect)
+    screen.blit(surface1, surf_rect)
     
-    exit1_text=font2.render("Exit", True, exit1_color)
-    exit1_text_rect=exit1_text.get_rect(center=(1000,200))
+    exit1_text = font2.render("Exit", True, exit1_color)
+    exit1_text_rect = exit1_text.get_rect(center=(1000, 200))
     
-    surface2=pygame.Surface((200,100))
-    surf_rect2=surface2.get_rect(center=(1000,200))
+    surface2 = pygame.Surface((200, 100))
+    surf_rect2 = surface2.get_rect(center=(1000, 200))
     surface2.fill('grey')
-    pygame.draw.rect(surface2,(76,45,125),surface2.get_rect(),5)     
-    surface2.blit(exit1_text,exit1_text_rect)
-    screen.blit(surface2,surf_rect2)
-    
-
+    pygame.draw.rect(surface2, (76, 45, 125), surface2.get_rect(), 5)     
+    surface2.blit(exit1_text, exit1_text_rect)
+    screen.blit(surface2, surf_rect2)
 
     for ev in pygame.event.get():
         if ev.type == pygame.MOUSEBUTTONDOWN:
             if PvP_text_rect.collidepoint(mouse_pos):
-                PvP=True
-                exit1=False
-
-            if  exit1_text_rect.collidepoint(mouse_pos):
-                exit1=True
-                PvP=False
-
+                PvP = True
+                exit1 = False
+            if exit1_text_rect.collidepoint(mouse_pos):
+                exit1 = True
+                PvP = False
 
     screen.blit(PvP_text, PvP_text_rect)
     screen.blit(exit1_text, exit1_text_rect)
 
-    
     pygame.display.flip()
     return PvP_text_rect, exit1_text_rect
 
@@ -177,7 +170,6 @@ def GAME_SCREEN():
 
     pygame.display.flip()
 
-
 def display_end_screen(winner):
     global SCHERMATA_MENU, INIZIO_PARTITA, FINE_PARTITA
     player1.trail_pos.clear()
@@ -194,9 +186,7 @@ def display_end_screen(winner):
 
     pygame.display.flip()
 
-
 while not done:
-
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             done = True
@@ -215,7 +205,6 @@ while not done:
                     if exit1_text_rect.collidepoint(mouse_pos):
                         exit1 = True
                         PvP = False
-                
             elif ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_SPACE:
                     if PvP:            
@@ -234,26 +223,23 @@ while not done:
             SCHERMATA_MENU = True
             player1.reset()
             player2.reset()
-            INIZIO_PARTITA = False
-                        
+            INIZIO_PARTITA = False                        
             pygame.mixer.music.load("menu_song.ogg")
             pygame.mixer.music.play(-1)
 
     if SCHERMATA_INIZIALE:
         TITLE_SCREEN()
-
     elif SCHERMATA_MENU:
         PvP_text_rect, exit1_text_rect = OPTIONS_MENU()
-
     elif INIZIO_PARTITA:
         GAME_SCREEN()
 
     clock.tick(60)
-        
     pygame.display.flip()
 
 pygame.quit()
 sys.exit()
+
 
 
 
