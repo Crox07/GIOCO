@@ -12,6 +12,7 @@ clock = pygame.time.Clock()
 Initial_Screen = pygame.image.load('Schermata_inizio.jpg').convert_alpha()
 space = pygame.image.load('menu.jpg').convert_alpha()
 space = pygame.transform.scale(space, (1200, 750))
+sfondo_partita = pygame.image.load('sfondo_partita.png').convert_alpha()
 
 game_name = pygame.image.load('TRON_RACER.jpg')
 game_name_rect = game_name.get_rect(center=(600, 400))
@@ -142,7 +143,7 @@ def OPTIONS_MENU():
 
 def GAME_SCREEN():
     global INIZIO_PARTITA, FINE_PARTITA
-    screen.fill('black')
+    screen.blit(sfondo_partita,(0,0))
 
     keys = pygame.key.get_pressed()
 
